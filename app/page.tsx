@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-type Category = "growth" | "behavior" | "training" | "achievement";
+type Category = "growth" | "behavior" | "training" | "achievement" | "health";
 
 type KiwiEntry = {
   id: string;
@@ -26,6 +26,7 @@ const categories: Record<Category, { label: string; icon: string; className: str
   behavior: { label: "Comportamiento", icon: "◌", className: "behavior" },
   training: { label: "Entrenamiento", icon: "✓", className: "training" },
   achievement: { label: "Logro", icon: "★", className: "achievement" },
+  health: { label: "Salud", icon: "+", className: "health" },
 };
 
 const initialEntries: KiwiEntry[] = [
@@ -94,6 +95,13 @@ const initialEntries: KiwiEntry[] = [
     category: "training",
     title: "Exploró el ático con arnés",
     notes: "Paseo supervisado; se mostró curiosa y contenta.",
+  },
+  {
+    id: "first-vomit",
+    date: "2026-07-14",
+    category: "health",
+    title: "Primer vómito",
+    notes: "Hoy Kiwi vomitó por primera vez.",
   },
 ];
 
@@ -300,7 +308,7 @@ export default function Home() {
     try {
       const parsed = JSON.parse(saved) as { entries?: KiwiEntry[] };
       if (Array.isArray(parsed.entries)) {
-        const requiredIds = new Set(["vaccine-trivalent-1", "weight-2", "weight-arrival"]);
+        const requiredIds = new Set(["vaccine-trivalent-1", "weight-2", "weight-arrival", "first-vomit"]);
         const savedIds = new Set(parsed.entries.map((entry) => entry.id));
         const newKnownEntries = initialEntries.filter((entry) => requiredIds.has(entry.id) && !savedIds.has(entry.id));
         const correctedEntries = parsed.entries.map((entry) => {
