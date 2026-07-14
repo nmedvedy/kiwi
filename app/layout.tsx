@@ -17,9 +17,10 @@ export const metadata: Metadata = {
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
     images: [
       {
-        url: "/kiwi/kiwi-carey-gris.png",
-        width: 1254,
-        height: 1254,
+        url: "https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3",
+        width: 800,
+        height: 800,
+        type: "image/jpeg",
         alt: "Kiwi, gatita carey gris con botitas blancas",
       },
     ],
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Diario de Kiwi",
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
-    images: ["/kiwi/kiwi-carey-gris.png"],
+    images: ["https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3"],
   },
   other: {
     "codex-preview": "development",

@@ -35,7 +35,7 @@ const initialEntries: KiwiEntry[] = [
     date: "2026-04-02",
     category: "achievement",
     title: "Nació Kiwi",
-    notes: "El comienzo de su historia.",
+    notes: "Nació en Valdemorillo, Comunidad de Madrid, España 🇪🇸.",
   },
   {
     id: "home",
@@ -319,7 +319,7 @@ export default function Home() {
             return { ...entry, title: "Segundo control de peso", notes: "Subió 400 g desde que llegó a casa." };
           }
           if (entry.id === "born") {
-            return { ...entry, date: "2026-04-02" };
+            return { ...entry, date: "2026-04-02", notes: "Nació en Valdemorillo, Comunidad de Madrid, España 🇪🇸." };
           }
           if (entry.id === "vaccine-trivalent-1") {
             return { ...entry, category: "health" as Category };
