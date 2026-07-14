@@ -32,8 +32,10 @@ jobs:
       - name: Generar sitio estático
         run: npm run build:pages
 
-      - name: Configurar GitHub Pages
+      - name: Habilitar y configurar GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Preparar archivos para publicar
         uses: actions/upload-pages-artifact@v3
