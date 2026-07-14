@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nmedvedy.github.io"),
-  title: "Diario de Kiwi",
+  title: "El diario de Kiwi",
   description: "Crecimiento, recuerdos y aventuras de Kiwi.",
   alternates: {
     canonical: "/kiwi/",
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: "/kiwi/",
-    siteName: "Diario de Kiwi",
-    title: "Diario de Kiwi",
+    siteName: "El diario de Kiwi",
+    title: "El diario de Kiwi",
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
     images: [
       {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Diario de Kiwi",
+    title: "El diario de Kiwi",
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
     images: ["https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3"],
   },

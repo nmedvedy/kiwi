@@ -11,10 +11,7 @@ type KiwiEntry = {
   title: string;
   notes: string;
   weightKg?: number;
-  lengthCm?: number;
 };
-
-type Metric = "weightKg" | "lengthCm";
 
 const STORAGE_KEY = "kiwi-diary-v1";
 const BIRTH_DATE = "2026-04-02";
@@ -124,7 +121,6 @@ const emptyForm = {
   title: "",
   notes: "",
   weightKg: "",
-  lengthCm: "",
 };
 
 function safeDate(date: string) {
@@ -147,22 +143,19 @@ function getAge() {
 }
 
 function GrowthChart({ entries }: { entries: KiwiEntry[] }) {
-  const [metric, setMetric] = useState<Metric>("weightKg");
-  const unit = metric === "weightKg" ? "kg" : "cm";
-  const label = metric === "weightKg" ? "Peso" : "Longitud";
   const points = entries
-    .filter((entry) => typeof entry[metric] === "number")
+    .filter((entry) => typeof entry.weightKg === "number")
     .sort((a, b) => a.date.localeCompare(b.date));
 
-  const values = points.map((point) => point[metric] as number);
+  const values = points.map((point) => point.weightKg as number);
   const max = values.length ? Math.max(...values) : 2;
   const min = values.length ? Math.min(...values) : 0;
-  const spread = Math.max(max - min, metric === "weightKg" ? 0.5 : 5);
+  const spread = Math.max(max - min, 0.5);
   const low = Math.max(0, min - spread * 0.35);
   const high = max + spread * 0.35;
   const coords = points.map((point, index) => {
     const x = points.length === 1 ? 260 : 48 + (index / (points.length - 1)) * 424;
-    const value = point[metric] as number;
+    const value = point.weightKg as number;
     const y = 176 - ((value - low) / (high - low)) * 126;
     return { x, y, point, value };
   });
@@ -175,15 +168,11 @@ function GrowthChart({ entries }: { entries: KiwiEntry[] }) {
           <p className="eyebrow">Evolución</p>
           <h2 id="growth-title">Cómo está creciendo</h2>
         </div>
-        <div className="segmented" aria-label="Métrica del gráfico">
-          <button className={metric === "weightKg" ? "active" : ""} onClick={() => setMetric("weightKg")}>Peso</button>
-          <button className={metric === "lengthCm" ? "active" : ""} onClick={() => setMetric("lengthCm")}>Longitud</button>
-        </div>
       </div>
 
       {points.length ? (
         <div className="chart-shell">
-          <svg viewBox="0 0 520 220" role="img" aria-label={`${label} de Kiwi a lo largo del tiempo`}>
+          <svg viewBox="0 0 520 220" role="img" aria-label="Peso de Kiwi a lo largo del tiempo">
             {[0, 1, 2].map((lineIndex) => {
               const y = 50 + lineIndex * 63;
               return <line key={lineIndex} x1="48" x2="472" y1={y} y2={y} className="grid-line" />;
@@ -192,7 +181,7 @@ function GrowthChart({ entries }: { entries: KiwiEntry[] }) {
             {coords.map(({ x, y, point, value }) => (
               <g key={point.id} className="chart-point">
                 <circle cx={x} cy={y} r="6" />
-                <text x={x} y={y - 14} textAnchor="middle">{value.toLocaleString("es-ES")} {unit}</text>
+                <text x={x} y={y - 14} textAnchor="middle">{value.toLocaleString("es-ES")} kg</text>
                 <text x={x} y="204" textAnchor="middle" className="axis-text">{formatDate(point.date)}</text>
               </g>
             ))}
@@ -200,8 +189,8 @@ function GrowthChart({ entries }: { entries: KiwiEntry[] }) {
         </div>
       ) : (
         <div className="empty-chart">
-          <span>{metric === "weightKg" ? "⚖" : "↔"}</span>
-          <strong>Aún no hay datos de {label.toLowerCase()}</strong>
+          <span>⚖</span>
+          <strong>Aún no hay datos de peso</strong>
           <p>Agregá dos registros para empezar a ver la curva.</p>
         </div>
       )}
@@ -365,7 +354,6 @@ export default function Home() {
       title: entry.title,
       notes: entry.notes,
       weightKg: entry.weightKg?.toString() ?? "",
-      lengthCm: entry.lengthCm?.toString() ?? "",
     });
     setModalOpen(true);
   }
@@ -379,7 +367,6 @@ export default function Home() {
       title: form.title.trim(),
       notes: form.notes.trim(),
       ...(form.weightKg ? { weightKg: Number(form.weightKg) } : {}),
-      ...(form.lengthCm ? { lengthCm: Number(form.lengthCm) } : {}),
     };
     setEntries((current) => editingId
       ? current.map((item) => item.id === editingId ? entry : item)
@@ -428,7 +415,7 @@ export default function Home() {
       <header className="topbar">
         <a className="brand" href="#inicio" aria-label="Ir al inicio">
           <span className="brand-mark">K</span>
-          <span>Diario de Kiwi</span>
+          <span>El diario de Kiwi</span>
         </a>
         <div className="header-actions">
           <button className="quiet-button desktop-action" onClick={exportData}>↓ Respaldo</button>
@@ -471,6 +458,17 @@ export default function Home() {
           </article>
         </section>
 
+        <section className="kiwi-facts" aria-label="Personalidad de Kiwi">
+          <article>
+            <span className="fact-icon">◉</span>
+            <div><p>Juguetes favoritos</p><strong>Cazar ratones de mentira, los resortes y el túnel.</strong></div>
+          </article>
+          <article>
+            <span className="fact-icon">✦</span>
+            <div><p>Habilidad especial</p><strong>Saludar a mis padres cuando llegan, esconderme en los placares y maullar casi por todo.</strong></div>
+          </article>
+        </section>
+
         <PhotoCarousel />
 
         <GrowthChart entries={entries} />
@@ -503,10 +501,9 @@ export default function Home() {
                     <div className="entry-meta"><time>{formatDate(entry.date, true)}</time><span className={`tag ${category.className}`}>{category.label}</span></div>
                     <h3>{entry.title}</h3>
                     {entry.notes && <p>{entry.notes}</p>}
-                    {(entry.weightKg || entry.lengthCm) && (
+                    {entry.weightKg && (
                       <div className="measurements">
-                        {entry.weightKg && <span>⚖ {entry.weightKg.toLocaleString("es-ES")} kg</span>}
-                        {entry.lengthCm && <span>↔ {entry.lengthCm.toLocaleString("es-ES")} cm</span>}
+                        <span>⚖ {entry.weightKg.toLocaleString("es-ES")} kg</span>
                       </div>
                     )}
                   </div>
@@ -542,7 +539,7 @@ export default function Home() {
         <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setModalOpen(false); }}>
           <section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div className="modal-heading">
-              <div><p className="eyebrow">Diario de Kiwi</p><h2 id="modal-title">{editingId ? "Editar registro" : "Nuevo registro"}</h2></div>
+              <div><p className="eyebrow">El diario de Kiwi</p><h2 id="modal-title">{editingId ? "Editar registro" : "Nuevo registro"}</h2></div>
               <button className="close-button" onClick={() => setModalOpen(false)} aria-label="Cerrar">×</button>
             </div>
             <form onSubmit={submitEntry}>
@@ -552,10 +549,7 @@ export default function Home() {
               </div>
               <label>Título<input type="text" required maxLength={80} placeholder="¿Qué pasó hoy?" value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} /></label>
               <label>Notas<textarea rows={3} maxLength={400} placeholder="Un detalle que quieras recordar…" value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} /></label>
-              <div className="form-row">
-                <label>Peso <span>(kg, opcional)</span><input type="number" min="0" step="0.01" inputMode="decimal" placeholder="1,40" value={form.weightKg} onChange={(event) => setForm({ ...form, weightKg: event.target.value })} /></label>
-                <label>Longitud <span>(cm, opcional)</span><input type="number" min="0" step="0.1" inputMode="decimal" placeholder="32" value={form.lengthCm} onChange={(event) => setForm({ ...form, lengthCm: event.target.value })} /></label>
-              </div>
+              <label>Peso <span>(kg, opcional)</span><input type="number" min="0" step="0.01" inputMode="decimal" placeholder="1,40" value={form.weightKg} onChange={(event) => setForm({ ...form, weightKg: event.target.value })} /></label>
               <div className="modal-actions">
                 <button type="button" className="quiet-button" onClick={() => setModalOpen(false)}>Cancelar</button>
                 <button type="submit" className="primary-button">{editingId ? "Guardar cambios" : "Guardar recuerdo"}</button>

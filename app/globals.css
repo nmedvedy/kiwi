@@ -65,6 +65,13 @@ h1 em { color: var(--sage-dark); font-weight: 400; }
 .stats strong { display: block; font-family: Georgia, serif; font-size: 21px; font-weight: 400; }
 .stats small { color: var(--muted); font-size: 10px; }
 
+.kiwi-facts { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.kiwi-facts article { min-height: 122px; padding: 24px; display: flex; align-items: flex-start; gap: 15px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255, 253, 248, .72); }
+.fact-icon { width: 39px; height: 39px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: var(--peach-light); color: #9b6342; font-weight: 800; }
+.kiwi-facts article:last-child .fact-icon { background: var(--lavender-light); color: #74677f; }
+.kiwi-facts p { margin-bottom: 7px; color: var(--sage-dark); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.kiwi-facts strong { display: block; font-family: Georgia, serif; font-size: 18px; font-weight: 400; line-height: 1.45; }
+
 .panel { margin-top: 34px; padding: 34px 38px; background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 16px 45px rgba(50, 55, 47, .05); }
 .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
 .section-heading h2 { margin-bottom: 0; font-family: Georgia, serif; font-size: clamp(30px, 4vw, 42px); font-weight: 400; letter-spacing: -.035em; }
@@ -178,6 +185,7 @@ textarea { resize: vertical; }
   .hero-description { margin-left: auto; margin-right: auto; }
   .kiwi-portrait { width: min(330px, 78vw); }
   .stats { grid-template-columns: 1fr 1fr; }
+  .kiwi-facts { grid-template-columns: 1fr; }
   .stats article:nth-child(2) { border-right: 0; }
   .stats article:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .carousel-stage, .carousel-photo { min-height: 480px; height: 480px; }
