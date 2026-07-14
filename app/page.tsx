@@ -113,6 +113,12 @@ const galleryItems = [
   { src: "/gallery/04-1000305189.webp", alt: "Kiwi dormida sobre el teclado del portátil", caption: "El teclado más cómodo de la casa" },
   { src: "/gallery/05-1000303808.webp", alt: "Kiwi recostada sobre el portátil mirando a cámara", caption: "La verdadera jefa de la oficina" },
   { src: "/gallery/10-1000299539.webp", alt: "Kiwi estirada sobre la mesa junto al termo y el mate", caption: "Mate, trabajo y compañía" },
+  { src: "/gallery/11-kiwi-rascador.webp", alt: "Kiwi recostada en el suelo junto a su rascador", caption: "Junto a su rascador" },
+  { src: "/gallery/12-kiwi-cazando.webp", alt: "Kiwi jugando boca arriba con un juguete", caption: "Cazadora en acción" },
+  { src: "/gallery/13-kiwi-raton.webp", alt: "Kiwi dormida abrazando su ratoncito de juguete", caption: "Siesta con su ratoncito" },
+  { src: "/gallery/14-kiwi-tablet.webp", alt: "Kiwi observando una pantalla sobre la mesa del sofá", caption: "Control de pantalla" },
+  { src: "/gallery/15-kiwi-caja.webp", alt: "Kiwi escondida dentro de una caja", caption: "La mejor caja de la casa" },
+  { src: "/gallery/16-kiwi-arnes.webp", alt: "Kiwi explorando el patio con su arnés", caption: "Exploradora con arnés" },
 ];
 
 const emptyForm = {
