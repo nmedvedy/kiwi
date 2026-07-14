@@ -18,19 +18,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Descargar código
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
-          cache: npm
 
-      - run: npm ci
-      - run: npm run build:pages
+      - name: Instalar dependencias
+        run: npm ci
 
-      - uses: actions/configure-pages@v5
+      - name: Generar sitio estático
+        run: npm run build:pages
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar archivos para publicar
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
