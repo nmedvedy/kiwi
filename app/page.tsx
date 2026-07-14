@@ -17,7 +17,7 @@ type KiwiEntry = {
 type Metric = "weightKg" | "lengthCm";
 
 const STORAGE_KEY = "kiwi-diary-v1";
-const BIRTH_DATE = "2026-04-01";
+const BIRTH_DATE = "2026-04-02";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const asset = (path: string) => `${BASE_PATH}${path}`;
 
@@ -32,7 +32,7 @@ const categories: Record<Category, { label: string; icon: string; className: str
 const initialEntries: KiwiEntry[] = [
   {
     id: "born",
-    date: "2026-04-01",
+    date: "2026-04-02",
     category: "achievement",
     title: "Nació Kiwi",
     notes: "El comienzo de su historia.",
@@ -70,7 +70,7 @@ const initialEntries: KiwiEntry[] = [
   {
     id: "vaccine-trivalent-1",
     date: "2026-06-27",
-    category: "achievement",
+    category: "health",
     title: "Primera dosis de vacuna trivalente",
     notes: "Primer registro de su pauta de vacunación trivalente.",
   },
@@ -317,6 +317,12 @@ export default function Home() {
           }
           if (entry.id === "weight-1") {
             return { ...entry, title: "Segundo control de peso", notes: "Subió 400 g desde que llegó a casa." };
+          }
+          if (entry.id === "born") {
+            return { ...entry, date: "2026-04-02" };
+          }
+          if (entry.id === "vaccine-trivalent-1") {
+            return { ...entry, category: "health" as Category };
           }
           return entry;
         });
