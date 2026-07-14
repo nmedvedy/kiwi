@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     "codex-preview": "development",
   },
   icons: {
-    icon: "./favicon.svg",
-    shortcut: "./favicon.svg",
+    icon: "./kiwi-favicon.svg",
+    shortcut: "./kiwi-favicon.svg",
   },
 };
 
