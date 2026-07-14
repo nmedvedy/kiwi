@@ -48,9 +48,19 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .header-actions { justify-content: flex-end; }
 .preference-controls { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .preference-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); box-shadow: 0 4px 15px rgba(40,45,38,.05); }
-.preference-toggle button { min-width: 51px; padding: 7px 9px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; transition: background .16s ease, color .16s ease, transform .16s ease; }
+.preference-toggle button { min-width: 51px; padding: 7px 9px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; transition: background .16s ease, color .16s ease, transform .16s ease; }
 .preference-toggle button:hover { color: var(--ink); }
 .preference-toggle button.active { background: var(--sage-light); color: var(--sage-dark); }
+.flag-icon { width: 20px; height: 14px; flex: 0 0 auto; display: inline-block; overflow: hidden; border-radius: 2px; box-shadow: 0 0 0 1px rgba(20, 24, 20, .16); }
+.flag-es { background: linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%); }
+.flag-uk {
+  background:
+    linear-gradient(33deg, transparent 42%, #fff 42% 47%, #c8102e 47% 53%, #fff 53% 58%, transparent 58%),
+    linear-gradient(-33deg, transparent 42%, #fff 42% 47%, #c8102e 47% 53%, #fff 53% 58%, transparent 58%),
+    linear-gradient(90deg, transparent 38%, #fff 38% 44%, #c8102e 44% 56%, #fff 56% 62%, transparent 62%),
+    linear-gradient(0deg, transparent 34%, #fff 34% 41%, #c8102e 41% 59%, #fff 59% 66%, transparent 66%),
+    #012169;
+}
 .theme-toggle button { min-width: 34px; padding-left: 8px; padding-right: 8px; font-size: 15px; }
 .primary-button, .quiet-button, .outline-button, .text-button, .close-button, .entry-actions button, .segmented button, .filters button { border: 0; cursor: pointer; transition: transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease; }
 .primary-button { padding: 11px 17px; border-radius: 999px; background: var(--sage-dark); color: white; font-weight: 700; box-shadow: 0 6px 18px rgba(83, 110, 90, .18); }

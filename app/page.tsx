@@ -552,8 +552,8 @@ export default function Home() {
         </a>
         <div className="preference-controls">
           <div className="preference-toggle" role="group" aria-label={t.language}>
-            <button className={language === "es" ? "active" : ""} onClick={() => setLanguage("es")} aria-pressed={language === "es"}>🇪🇸 <span>ES</span></button>
-            <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}>🇬🇧 <span>EN</span></button>
+            <button className={language === "es" ? "active" : ""} onClick={() => setLanguage("es")} aria-pressed={language === "es"}><span className="flag-icon flag-es" aria-hidden="true" /><span>ES</span></button>
+            <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}><span className="flag-icon flag-uk" aria-hidden="true" /><span>EN</span></button>
           </div>
           <div className="preference-toggle theme-toggle" role="group" aria-label={t.appearance}>
             <button className={theme === "light" ? "active" : ""} onClick={() => setTheme("light")} aria-label={t.light} aria-pressed={theme === "light"}>☀</button>
