@@ -145,6 +145,7 @@ const galleryItems = [
   { src: "/gallery/14-kiwi-tablet.webp", alt: "Kiwi observando una pantalla sobre la mesa del sofá", caption: "Control de pantalla" },
   { src: "/gallery/15-kiwi-caja.webp", alt: "Kiwi escondida dentro de una caja", caption: "La mejor caja de la casa" },
   { src: "/gallery/16-kiwi-arnes.webp", alt: "Kiwi explorando el patio con su arnés", caption: "Exploradora con arnés" },
+  { src: "/gallery/17-kiwi-arnes-rosa.webp", alt: "Kiwi mirando a cámara con su arnés rosa", caption: "Lista para pasear con su arnés rosa" },
 ];
 
 const galleryEnglish = [
@@ -164,6 +165,7 @@ const galleryEnglish = [
   { alt: "Kiwi watching a screen on the sofa table", caption: "Screen inspection" },
   { alt: "Kiwi hiding inside a box", caption: "The best box in the house" },
   { alt: "Kiwi exploring the patio in her harness", caption: "Explorer in a harness" },
+  { alt: "Kiwi looking at the camera in her pink harness", caption: "Ready for a walk in her pink harness" },
 ];
 
 const ui = {
