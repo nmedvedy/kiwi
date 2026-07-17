@@ -38,8 +38,8 @@ const db = getFirestore(app);
 const copy = {
   es: {
     eyebrow: "Libro de visitas",
-    title: "Mensajes para Kiwi",
-    description: "Dejale una pequeña nota a Kiwi. Quedará guardada aquí para que todos puedan verla.",
+    title: "Dejame un Mensaje",
+    description: "Si me conociste o me querés conocer, dejame tu mensaje sobre mi comportamiento que mis humanos preferidos me lo leerán 😼",
     name: "Nombre",
     namePlaceholder: "¿Cómo te llamás?",
     comment: "Comentario",
@@ -55,8 +55,8 @@ const copy = {
   },
   en: {
     eyebrow: "Guestbook",
-    title: "Messages for Kiwi",
-    description: "Leave Kiwi a little note. It will be saved here for everyone to see.",
+    title: "Leave me a Message",
+    description: "If you've met me or would like to, leave me a message about my behaviour and my favourite humans will read it to me 😼",
     name: "Name",
     namePlaceholder: "What's your name?",
     comment: "Comment",
