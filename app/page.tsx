@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Guestbook from "./comments";
 
 type Category = "growth" | "behavior" | "training" | "achievement" | "health";
 type Language = "es" | "en";
@@ -676,6 +677,8 @@ export default function Home() {
             <input ref={importRef} type="file" accept="application/json" onChange={importData} hidden />
           </div>
         </section>
+
+        <Guestbook language={language} />
       </div>
 
       <footer><span>{t.footerOne}</span><span>{t.footerTwo}</span></footer>
