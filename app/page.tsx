@@ -666,6 +666,8 @@ export default function Home() {
           </div>
         </section>
 
+        <Guestbook language={language} />
+
         <section className="data-tools" aria-label={t.dataTools}>
           <div>
             <strong>{t.localData}</strong>
@@ -677,8 +679,6 @@ export default function Home() {
             <input ref={importRef} type="file" accept="application/json" onChange={importData} hidden />
           </div>
         </section>
-
-        <Guestbook language={language} />
       </div>
 
       <footer><span>{t.footerOne}</span><span>{t.footerTwo}</span></footer>
