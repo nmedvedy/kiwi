@@ -134,7 +134,7 @@ export default function Guestbook({ language }: { language: Language }) {
   }
 
   return (
-    <section className="panel guestbook-panel" aria-labelledby="guestbook-title">
+    <section className="panel guestbook-panel" id="guestbook" aria-labelledby="guestbook-title">
       <div className="guestbook-heading">
         <div>
           <p className="eyebrow">{t.eyebrow}</p>

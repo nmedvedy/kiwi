@@ -173,7 +173,7 @@ const ui = {
   es: {
     brand: "El diario de Kiwi", backup: "Respaldo", newRecord: "Nuevo registro",
     language: "Idioma", appearance: "Apariencia", light: "Claro", dark: "Oscuro",
-    home: "Ir al inicio", storyEyebrow: "Su pequeña gran historia", heroFirst: "Kiwi está creciendo", heroSecond: "demasiado rápido.",
+    home: "Ir al inicio", storyEyebrow: "Su pequeña gran historia", heroFirst: "Kiwi está creciendo", heroSecond: "demasiado rápido.", leaveMessage: "Dejame tu mensaje",
     heroDescription: "Guardá sus cambios, aprendizajes y momentos especiales en un solo lugar privado.", viewStory: "Ver su historia",
     portraitAria: "Retrato de Kiwi", portraitAlt: "Gatita carey gris con franja crema en la cara y botitas blancas", portraitCaption: "carey gris · botitas blancas",
     summary: "Resumen de Kiwi", ageToday: "Edad hoy", latestWeight: "Último peso", memories: "Recuerdos", achievements: "Logros",
@@ -195,7 +195,7 @@ const ui = {
   en: {
     brand: "Kiwi's diary", backup: "Backup", newRecord: "New entry",
     language: "Language", appearance: "Appearance", light: "Light", dark: "Dark",
-    home: "Go to the top", storyEyebrow: "Her little big story", heroFirst: "Kiwi is growing up", heroSecond: "far too quickly.",
+    home: "Go to the top", storyEyebrow: "Her little big story", heroFirst: "Kiwi is growing up", heroSecond: "far too quickly.", leaveMessage: "Leave me a message",
     heroDescription: "Keep track of her changes, discoveries and special moments in one private place.", viewStory: "View her story",
     portraitAria: "Portrait of Kiwi", portraitAlt: "Grey tortoiseshell kitten with a cream stripe on her face and white paws", portraitCaption: "grey tortoiseshell · white paws",
     summary: "Kiwi at a glance", ageToday: "Age today", latestWeight: "Latest weight", memories: "Memories", achievements: "Achievements",
@@ -575,7 +575,10 @@ export default function Home() {
             <p className="eyebrow">{t.storyEyebrow}</p>
             <h1>{t.heroFirst}<br /><em>{t.heroSecond}</em></h1>
             <p className="hero-description">{t.heroDescription}</p>
-            <button className="text-button" onClick={() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" })}>{t.viewStory} <span>→</span></button>
+            <div className="hero-links">
+              <button className="text-button" onClick={() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" })}>{t.viewStory} <span>→</span></button>
+              <button className="text-button guestbook-link" onClick={() => document.getElementById("guestbook")?.scrollIntoView({ behavior: "smooth" })}>{t.leaveMessage} <span>↓</span></button>
+            </div>
           </div>
           <div className="kiwi-portrait" aria-label={t.portraitAria}>
             <div className="sun-dot dot-one" />

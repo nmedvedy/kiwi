@@ -80,6 +80,8 @@ h1 em { color: var(--sage-dark); font-weight: 400; }
 .hero-description { max-width: 520px; margin-bottom: 28px; color: var(--muted); font-size: 18px; line-height: 1.65; }
 .text-button { padding: 0 0 5px; background: transparent; border-bottom: 1px solid var(--ink); font-weight: 700; }
 .text-button span { margin-left: 8px; }
+.hero-links { display: flex; align-items: flex-start; flex-direction: column; gap: 14px; }
+.guestbook-link { color: var(--sage-dark); border-bottom-color: var(--sage-dark); }
 
 .kiwi-portrait { width: min(100%, 390px); aspect-ratio: 1; justify-self: center; position: relative; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #dce6db; box-shadow: inset 0 0 0 14px rgba(255,255,255,.35); }
 .kiwi-kitten-image { width: 100%; height: 100%; position: relative; z-index: 1; display: block; object-fit: cover; border-radius: 50%; }
@@ -269,6 +271,7 @@ html[data-theme="dark"] .guestbook-form { background: #263229; }
   .hero { min-height: auto; padding: 52px 12px 42px; grid-template-columns: 1fr; text-align: center; }
   .hero-copy { margin: 0 auto; }
   .hero-description { margin-left: auto; margin-right: auto; }
+  .hero-links { align-items: center; }
   .kiwi-portrait { width: min(330px, 78vw); }
   .stats { grid-template-columns: 1fr 1fr; }
   .kiwi-facts { grid-template-columns: 1fr; }
