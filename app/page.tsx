@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import Guestbook from "./comments";
+import Guestbook, { type GuestbookPhoto } from "./comments";
 
 type Category = "growth" | "behavior" | "training" | "achievement" | "health";
 type Language = "es" | "en";
@@ -16,6 +16,14 @@ type KiwiEntry = {
   titleEn?: string;
   notesEn?: string;
   weightKg?: number;
+};
+
+type GalleryItem = {
+  src: string;
+  alt: string;
+  caption: string;
+  altEn?: string;
+  captionEn?: string;
 };
 
 const STORAGE_KEY = "kiwi-diary-v1";
@@ -129,7 +137,7 @@ const initialEntries: KiwiEntry[] = [
   },
 ];
 
-const galleryItems = [
+const galleryItems: GalleryItem[] = [
   { src: "/gallery/07-1000301712.webp", alt: "Kiwi recostada en el sofá mirando a cámara", caption: "Esa mirada que lo dice todo" },
   { src: "/gallery/02-1000305232.webp", alt: "Kiwi durmiendo boca arriba en su camita", caption: "Modo siesta activado" },
   { src: "/gallery/08-1000300449.webp", alt: "Kiwi observando desde una ventana protegida con red", caption: "Exploradora desde un lugar seguro" },
@@ -301,16 +309,27 @@ function GrowthChart({ entries, language }: { entries: KiwiEntry[]; language: La
   );
 }
 
-function PhotoCarousel({ language }: { language: Language }) {
+function PhotoCarousel({ language, visitorPhotos }: { language: Language; visitorPhotos: GuestbookPhoto[] }) {
   const [active, setActive] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const touchStart = useRef<number | null>(null);
   const t = ui[language];
-  const sourceItem = galleryItems[active];
-  const item = language === "es" ? sourceItem : { ...sourceItem, ...galleryEnglish[active] };
+  const visitorItems: GalleryItem[] = visitorPhotos.map((photo) => ({
+    src: photo.dataUrl,
+    alt: `Kiwi en una foto compartida por ${photo.name || "un visitante"}`,
+    caption: `Compartida por ${photo.name || "un visitante"}`,
+    altEn: `Kiwi in a photo shared by ${photo.name || "a visitor"}`,
+    captionEn: `Shared by ${photo.name || "a visitor"}`,
+  }));
+  const allGalleryItems = [...galleryItems, ...visitorItems];
+  const sourceItem = allGalleryItems[active] ?? allGalleryItems[0];
+  const staticTranslation = active < galleryEnglish.length ? galleryEnglish[active] : null;
+  const item = language === "es"
+    ? sourceItem
+    : { ...sourceItem, alt: staticTranslation?.alt ?? sourceItem.altEn ?? sourceItem.alt, caption: staticTranslation?.caption ?? sourceItem.captionEn ?? sourceItem.caption };
 
   function move(direction: number) {
-    setActive((current) => (current + direction + galleryItems.length) % galleryItems.length);
+    setActive((current) => (current + direction + allGalleryItems.length) % allGalleryItems.length);
   }
 
   function finishSwipe(endX: number) {
@@ -338,7 +357,7 @@ function PhotoCarousel({ language }: { language: Language }) {
           <p className="eyebrow">{t.album}</p>
           <h2 id="gallery-title">{t.kiwiMoments}</h2>
         </div>
-        <span className="gallery-count">{String(active + 1).padStart(2, "0")} / {String(galleryItems.length).padStart(2, "0")}</span>
+        <span className="gallery-count">{String(active + 1).padStart(2, "0")} / {String(allGalleryItems.length).padStart(2, "0")}</span>
       </div>
 
       <div
@@ -359,12 +378,12 @@ function PhotoCarousel({ language }: { language: Language }) {
       </div>
 
       <div className="thumbnail-row" aria-label={t.choosePhoto}>
-        {galleryItems.map((photo, index) => (
+        {allGalleryItems.map((photo, index) => (
           <button
             key={photo.src}
             className={index === active ? "active" : ""}
             onClick={() => setActive(index)}
-            aria-label={`${t.viewPhoto} ${index + 1}: ${language === "es" ? photo.caption : galleryEnglish[index].caption}`}
+            aria-label={`${t.viewPhoto} ${index + 1}: ${language === "es" ? photo.caption : (index < galleryEnglish.length ? galleryEnglish[index].caption : photo.captionEn ?? photo.caption)}`}
             aria-current={index === active ? "true" : undefined}
           >
             <img src={asset(photo.src)} alt="" loading="lazy" />
@@ -379,7 +398,7 @@ function PhotoCarousel({ language }: { language: Language }) {
             <button className="lightbox-arrow previous" onClick={() => move(-1)} aria-label={t.previousPhoto}>←</button>
             <img src={asset(item.src)} alt={item.alt} />
             <button className="lightbox-arrow next" onClick={() => move(1)} aria-label={t.nextPhoto}>→</button>
-            <p>{item.caption} <span>{active + 1} {t.of} {galleryItems.length}</span></p>
+            <p>{item.caption} <span>{active + 1} {t.of} {allGalleryItems.length}</span></p>
           </section>
         </div>
       )}
@@ -391,6 +410,7 @@ export default function Home() {
   const [entries, setEntries] = useState<KiwiEntry[]>(initialEntries);
   const [language, setLanguage] = useState<Language>("es");
   const [theme, setTheme] = useState<Theme>("light");
+  const [visitorPhotos, setVisitorPhotos] = useState<GuestbookPhoto[]>([]);
   const [filter, setFilter] = useState<"all" | Category>("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -618,7 +638,7 @@ export default function Home() {
           </article>
         </section>
 
-        <PhotoCarousel language={language} />
+        <PhotoCarousel language={language} visitorPhotos={visitorPhotos} />
 
         <GrowthChart entries={entries} language={language} />
 
@@ -669,7 +689,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Guestbook language={language} />
+        <Guestbook language={language} onPhotosChange={setVisitorPhotos} />
 
         <section className="data-tools" aria-label={t.dataTools}>
           <div>
