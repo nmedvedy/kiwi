@@ -39,7 +39,7 @@ const copy = {
   es: {
     eyebrow: "Libro de visitas",
     title: "Dejame un Mensaje",
-    description: "Si ya me conocés o querés conocerme, dejá un mensaje sobre mí. Mis humanos preferidos me lo leerán 😼",
+    description: "Si ya me conocés o querés conocerme, dejá un mensaje sobre mí. Mis humanos preferidos me lo leerán. También podés dejar una foto de cuándo me cuidaste o visitaste 😼",
     name: "Nombre",
     namePlaceholder: "¿Cómo te llamás?",
     comment: "Comentario",
