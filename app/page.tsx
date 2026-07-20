@@ -31,7 +31,9 @@ const LANGUAGE_KEY = "kiwi-language";
 const THEME_KEY = "kiwi-theme";
 const BIRTH_DATE = "2026-04-02";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const asset = (path: string) => `${BASE_PATH}${path}`;
+const asset = (path: string) => path.startsWith("data:") || path.startsWith("http://") || path.startsWith("https://")
+  ? path
+  : `${BASE_PATH}${path}`;
 
 const categories: Record<Category, { label: Record<Language, string>; icon: string; className: string }> = {
   growth: { label: { es: "Crecimiento", en: "Growth" }, icon: "↗", className: "growth" },
