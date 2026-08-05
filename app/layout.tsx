@@ -5,9 +5,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://nmedvedy.github.io"),
   title: "El diario de Kiwi",
   description: "Crecimiento, recuerdos y aventuras de Kiwi.",
-  alternates: {
-    canonical: "/kiwi/",
-  },
+  alternates: { canonical: "/kiwi/" },
   openGraph: {
     type: "website",
     locale: "es_ES",
@@ -15,15 +13,13 @@ export const metadata: Metadata = {
     siteName: "El diario de Kiwi",
     title: "El diario de Kiwi",
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
-    images: [
-      {
-        url: "https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3",
-        width: 800,
-        height: 800,
-        type: "image/jpeg",
-        alt: "Kiwi, gatita carey gris con botitas blancas",
-      },
-    ],
+    images: [{
+      url: "https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3",
+      width: 800,
+      height: 800,
+      type: "image/jpeg",
+      alt: "Kiwi, gatita carey gris con botitas blancas",
+    }],
   },
   twitter: {
     card: "summary_large_image",
@@ -31,13 +27,8 @@ export const metadata: Metadata = {
     description: "Crecimiento, recuerdos y aventuras de Kiwi.",
     images: ["https://nmedvedy.github.io/kiwi/kiwi-share.jpg?v=3"],
   },
-  other: {
-    "codex-preview": "development",
-  },
-  icons: {
-    icon: "./kiwi-favicon.svg",
-    shortcut: "./kiwi-favicon.svg",
-  },
+  other: { "codex-preview": "development" },
+  icons: { icon: "./kiwi-favicon.svg", shortcut: "./kiwi-favicon.svg" },
 };
 
 const diaryMigration = `
@@ -63,6 +54,15 @@ const diaryMigration = `
         notes: "Recibió la segunda dosis de su pauta de vacunación trivalente.",
         titleEn: "Second dose of the trivalent vaccine",
         notesEn: "She received the second dose in her trivalent vaccination schedule."
+      },
+      {
+        id: "first-nap-with-mum",
+        date: "2026-08-05",
+        category: "achievement",
+        title: "Primera siesta con mamá",
+        notes: "Kiwi durmió por primera vez acurrucada junto a Melina.",
+        titleEn: "First nap with mum",
+        notesEn: "Kiwi slept curled up beside Melina for the first time."
       }
     ];
     const initialEntries = [
@@ -96,16 +96,54 @@ const diaryMigration = `
 })();
 `;
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const napPhotoEnhancement = `
+(() => {
+  const install = async () => {
+    if (document.querySelector('[data-kiwi-nap-photo]')) return;
+    const gallery = document.querySelector('.gallery-panel');
+    if (!gallery) return;
+    try {
+      const base = document.querySelector('base')?.href || window.location.href;
+      const sourceUrl = new URL('gallery/18-kiwi-primera-siesta-mama.webp.b64', base);
+      const encoded = (await fetch(sourceUrl).then((response) => response.text())).trim();
+      const language = document.documentElement.lang === 'en' ? 'en' : 'es';
+      const card = document.createElement('figure');
+      card.setAttribute('data-kiwi-nap-photo', 'true');
+      card.style.margin = '28px auto 0';
+      card.style.maxWidth = '560px';
+      card.style.textAlign = 'center';
+      const image = document.createElement('img');
+      image.src = 'data:image/webp;base64,' + encoded;
+      image.alt = language === 'en' ? 'Kiwi curled up beside Melina during their first nap together' : 'Kiwi acurrucada junto a Melina durante su primera siesta juntas';
+      image.style.width = '100%';
+      image.style.maxHeight = '680px';
+      image.style.objectFit = 'cover';
+      image.style.borderRadius = '24px';
+      image.style.display = 'block';
+      image.style.boxShadow = '0 18px 45px rgba(41, 34, 28, 0.14)';
+      const caption = document.createElement('figcaption');
+      caption.textContent = language === 'en' ? 'First nap with mum' : 'Primera siesta con mamá';
+      caption.style.fontWeight = '700';
+      caption.style.fontSize = '1.05rem';
+      caption.style.marginTop = '14px';
+      card.append(image, caption);
+      gallery.appendChild(card);
+    } catch {}
+  };
+  const observer = new MutationObserver(install);
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener('DOMContentLoaded', install);
+  setTimeout(install, 700);
+})();
+`;
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
       <body>
         <script dangerouslySetInnerHTML={{ __html: diaryMigration }} />
         {children}
+        <script dangerouslySetInnerHTML={{ __html: napPhotoEnhancement }} />
       </body>
     </html>
   );
