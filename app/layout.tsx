@@ -98,42 +98,236 @@ const diaryMigration = `
 
 const napPhotoEnhancement = `
 (() => {
+  let photoData = "";
+  let customSelected = false;
+  let observerQueued = false;
+
+  const language = () => document.documentElement.lang === "en" ? "en" : "es";
+  const caption = () => language() === "en" ? "First nap with mum" : "Primera siesta con mamá";
+  const alt = () => language() === "en"
+    ? "Kiwi curled up beside Melina during their first nap together"
+    : "Kiwi acurrucada junto a Melina durante su primera siesta juntas";
+
+  const gallery = () => document.querySelector(".gallery-panel");
+  const originalThumbnails = () => Array.from(document.querySelectorAll(".thumbnail-row button:not([data-kiwi-nap-thumb])"));
+
+  const updateTotal = () => {
+    const count = document.querySelector(".gallery-count");
+    if (!count) return;
+    if (customSelected) {
+      if (count.textContent !== "18 / 18") count.textContent = "18 / 18";
+      return;
+    }
+    const text = count.textContent || "01 / 17";
+    const slash = text.indexOf("/");
+    const current = slash >= 0 ? text.slice(0, slash).trim() : "01";
+    const next = current + " / 18";
+    if (count.textContent !== next) count.textContent = next;
+  };
+
+  const renderCustom = () => {
+    if (!photoData) return;
+    const mainImage = document.querySelector(".carousel-photo img");
+    const mainButton = document.querySelector(".carousel-photo");
+    const mainCaption = document.querySelector(".carousel-caption strong");
+    const customThumb = document.querySelector("[data-kiwi-nap-thumb]");
+    if (!mainImage || !mainCaption || !customThumb) return;
+
+    originalThumbnails().forEach((button) => button.classList.remove("active"));
+    customThumb.classList.add("active");
+    customThumb.setAttribute("aria-current", "true");
+    mainImage.src = photoData;
+    mainImage.alt = alt();
+    if (mainButton) mainButton.setAttribute("aria-label", (language() === "en" ? "Enlarge photo: " : "Ampliar foto: ") + caption());
+    mainCaption.textContent = caption();
+    updateTotal();
+  };
+
+  const selectOriginal = (index) => {
+    const buttons = originalThumbnails();
+    if (!buttons.length) return;
+    customSelected = false;
+    const customThumb = document.querySelector("[data-kiwi-nap-thumb]");
+    if (customThumb) {
+      customThumb.classList.remove("active");
+      customThumb.removeAttribute("aria-current");
+    }
+    const safeIndex = Math.max(0, Math.min(index, buttons.length - 1));
+    buttons[safeIndex].click();
+    window.setTimeout(updateTotal, 0);
+  };
+
+  const openCustomLightbox = () => {
+    const container = gallery();
+    if (!container || document.querySelector("[data-kiwi-nap-lightbox]")) return;
+
+    const overlay = document.createElement("div");
+    overlay.className = "photo-lightbox";
+    overlay.setAttribute("data-kiwi-nap-lightbox", "true");
+    overlay.setAttribute("role", "presentation");
+
+    const content = document.createElement("section");
+    content.className = "lightbox-content";
+    content.setAttribute("role", "dialog");
+    content.setAttribute("aria-modal", "true");
+    content.setAttribute("aria-label", caption());
+
+    const close = document.createElement("button");
+    close.className = "lightbox-close";
+    close.setAttribute("aria-label", language() === "en" ? "Close enlarged photo" : "Cerrar foto ampliada");
+    close.textContent = "×";
+
+    const previous = document.createElement("button");
+    previous.className = "lightbox-arrow previous";
+    previous.setAttribute("aria-label", language() === "en" ? "Previous photo" : "Foto anterior");
+    previous.textContent = "←";
+
+    const image = document.createElement("img");
+    image.src = photoData;
+    image.alt = alt();
+
+    const next = document.createElement("button");
+    next.className = "lightbox-arrow next";
+    next.setAttribute("aria-label", language() === "en" ? "Next photo" : "Foto siguiente");
+    next.textContent = "→";
+
+    const text = document.createElement("p");
+    text.append(document.createTextNode(caption() + " "));
+    const number = document.createElement("span");
+    number.textContent = language() === "en" ? "18 of 18" : "18 de 18";
+    text.append(number);
+
+    const remove = () => overlay.remove();
+    close.addEventListener("click", remove);
+    overlay.addEventListener("mousedown", (event) => { if (event.target === overlay) remove(); });
+    previous.addEventListener("click", () => { remove(); selectOriginal(originalThumbnails().length - 1); });
+    next.addEventListener("click", () => { remove(); selectOriginal(0); });
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        remove();
+        window.removeEventListener("keydown", onKeyDown);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    content.append(close, previous, image, next, text);
+    overlay.append(content);
+    container.append(overlay);
+  };
+
+  const wireGallery = () => {
+    document.querySelectorAll("[data-kiwi-nap-photo]").forEach((node) => node.remove());
+    const container = gallery();
+    const row = document.querySelector(".thumbnail-row");
+    if (!container || !row || !photoData) return;
+
+    let customThumb = document.querySelector("[data-kiwi-nap-thumb]");
+    if (!customThumb) {
+      customThumb = document.createElement("button");
+      customThumb.setAttribute("data-kiwi-nap-thumb", "true");
+      const image = document.createElement("img");
+      image.src = photoData;
+      image.alt = "";
+      image.loading = "lazy";
+      customThumb.append(image);
+      customThumb.addEventListener("click", () => {
+        customSelected = true;
+        renderCustom();
+      });
+      row.append(customThumb);
+    }
+    customThumb.setAttribute("aria-label", (language() === "en" ? "View photo 18: " : "Ver foto 18: ") + caption());
+
+    originalThumbnails().forEach((button) => {
+      if (button.getAttribute("data-kiwi-nap-wired") === "true") return;
+      button.setAttribute("data-kiwi-nap-wired", "true");
+      button.addEventListener("click", () => {
+        customSelected = false;
+        window.setTimeout(updateTotal, 0);
+      }, true);
+    });
+
+    const previous = document.querySelector(".carousel-stage .carousel-arrow.previous");
+    const next = document.querySelector(".carousel-stage .carousel-arrow.next");
+    const mainButton = document.querySelector(".carousel-stage .carousel-photo");
+
+    if (previous && previous.getAttribute("data-kiwi-nap-wired") !== "true") {
+      previous.setAttribute("data-kiwi-nap-wired", "true");
+      previous.addEventListener("click", (event) => {
+        const buttons = originalThumbnails();
+        if (customSelected) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          selectOriginal(buttons.length - 1);
+          return;
+        }
+        if (buttons[0] && buttons[0].classList.contains("active")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          customSelected = true;
+          renderCustom();
+        }
+      }, true);
+    }
+
+    if (next && next.getAttribute("data-kiwi-nap-wired") !== "true") {
+      next.setAttribute("data-kiwi-nap-wired", "true");
+      next.addEventListener("click", (event) => {
+        const buttons = originalThumbnails();
+        if (customSelected) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          selectOriginal(0);
+          return;
+        }
+        const last = buttons[buttons.length - 1];
+        if (last && last.classList.contains("active")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          customSelected = true;
+          renderCustom();
+        }
+      }, true);
+    }
+
+    if (mainButton && mainButton.getAttribute("data-kiwi-nap-wired") !== "true") {
+      mainButton.setAttribute("data-kiwi-nap-wired", "true");
+      mainButton.addEventListener("click", (event) => {
+        if (!customSelected) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openCustomLightbox();
+      }, true);
+    }
+
+    if (customSelected) renderCustom();
+    else updateTotal();
+  };
+
+  const scheduleWire = () => {
+    if (observerQueued) return;
+    observerQueued = true;
+    window.requestAnimationFrame(() => {
+      observerQueued = false;
+      wireGallery();
+    });
+  };
+
   const install = async () => {
-    if (document.querySelector('[data-kiwi-nap-photo]')) return;
-    const gallery = document.querySelector('.gallery-panel');
-    if (!gallery) return;
     try {
-      const base = document.querySelector('base')?.href || window.location.href;
-      const sourceUrl = new URL('gallery/18-kiwi-primera-siesta-mama.webp.b64', base);
+      const base = document.querySelector("base")?.href || window.location.href;
+      const sourceUrl = new URL("gallery/18-kiwi-primera-siesta-mama.webp.b64", base);
       const encoded = (await fetch(sourceUrl).then((response) => response.text())).trim();
-      const language = document.documentElement.lang === 'en' ? 'en' : 'es';
-      const card = document.createElement('figure');
-      card.setAttribute('data-kiwi-nap-photo', 'true');
-      card.style.margin = '28px auto 0';
-      card.style.maxWidth = '560px';
-      card.style.textAlign = 'center';
-      const image = document.createElement('img');
-      image.src = 'data:image/webp;base64,' + encoded;
-      image.alt = language === 'en' ? 'Kiwi curled up beside Melina during their first nap together' : 'Kiwi acurrucada junto a Melina durante su primera siesta juntas';
-      image.style.width = '100%';
-      image.style.maxHeight = '680px';
-      image.style.objectFit = 'cover';
-      image.style.borderRadius = '24px';
-      image.style.display = 'block';
-      image.style.boxShadow = '0 18px 45px rgba(41, 34, 28, 0.14)';
-      const caption = document.createElement('figcaption');
-      caption.textContent = language === 'en' ? 'First nap with mum' : 'Primera siesta con mamá';
-      caption.style.fontWeight = '700';
-      caption.style.fontSize = '1.05rem';
-      caption.style.marginTop = '14px';
-      card.append(image, caption);
-      gallery.appendChild(card);
+      photoData = "data:image/webp;base64," + encoded;
+      wireGallery();
+      const observer = new MutationObserver(scheduleWire);
+      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["lang"] });
     } catch {}
   };
-  const observer = new MutationObserver(install);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  window.addEventListener('DOMContentLoaded', install);
-  setTimeout(install, 700);
+
+  if (document.readyState === "loading") window.addEventListener("DOMContentLoaded", install, { once: true });
+  else install();
 })();
 `;
 
