@@ -137,6 +137,35 @@ const initialEntries: KiwiEntry[] = [
     titleEn: "First time vomiting",
     notesEn: "Today Kiwi vomited for the first time.",
   },
+  {
+    id: "weight-3",
+    date: "2026-07-27",
+    category: "growth",
+    title: "Control de peso en veterinaria",
+    notes: "Kiwi registró un peso de 2,22 kg.",
+    titleEn: "Veterinary weight check",
+    notesEn: "Kiwi recorded a weight of 2.22 kg.",
+    weightKg: 2.22,
+  },
+  {
+    id: "vaccine-trivalent-2",
+    date: "2026-07-27",
+    category: "health",
+    title: "Segunda dosis de vacuna trivalente",
+    notes: "Recibió la segunda dosis de su pauta de vacunación trivalente.",
+    titleEn: "Second dose of the trivalent vaccine",
+    notesEn: "She received the second dose in her trivalent vaccination schedule.",
+  },
+  {
+    id: "weight-4",
+    date: "2026-10-01",
+    category: "growth",
+    title: "Control veterinario y nuevo peso",
+    notes: "Hoy Kiwi fue al veterinario y pesó 3,13 kg.",
+    titleEn: "Vet check-up and new weight",
+    notesEn: "Today Kiwi went to the vet and weighed 3.13 kg.",
+    weightKg: 3.13,
+  },
 ];
 
 const galleryItems: GalleryItem[] = [
@@ -436,7 +465,7 @@ export default function Home() {
     try {
       const parsed = JSON.parse(saved) as { entries?: KiwiEntry[] };
       if (Array.isArray(parsed.entries)) {
-        const requiredIds = new Set(["vaccine-trivalent-1", "weight-2", "weight-arrival", "first-vomit"]);
+        const requiredIds = new Set(["vaccine-trivalent-1", "vaccine-trivalent-2", "weight-2", "weight-3", "weight-4", "weight-arrival", "first-vomit"]);
         const savedIds = new Set(parsed.entries.map((entry) => entry.id));
         const newKnownEntries = initialEntries.filter((entry) => requiredIds.has(entry.id) && !savedIds.has(entry.id));
         const correctedEntries = parsed.entries.map((entry) => {
